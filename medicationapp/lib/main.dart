@@ -7,7 +7,7 @@ void main() {
   runApp(
     ChangeNotifierProvider(
       create: (context) => ThemeProvider(),
-      child: MedicationApp(),
+      child: const MedicationApp(),
     ),
   );
 }
@@ -21,6 +21,9 @@ class MedicationApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       home: const HomePage(),
       theme: Provider.of<ThemeProvider>(context).themeData,
+      // initialRoute: '/',
+      // routes: {
+      // },
     );
   }
 }
