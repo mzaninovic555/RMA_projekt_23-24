@@ -10,6 +10,6 @@ class Pharmacies extends StatefulWidget {
 class _PharmaciesState extends State<Pharmacies> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Placeholder();
   }
 }
