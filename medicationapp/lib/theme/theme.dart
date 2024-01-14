@@ -6,7 +6,7 @@ ThemeData lightMode = ThemeData(
   colorScheme: ColorScheme.light(
     primary: Colors.red,
     primaryContainer: Colors.red[700],
-    secondary: Colors.deepOrange[300]!,
+    secondary: Colors.deepOrange[200]!,
   ),
   scaffoldBackgroundColor: Colors.grey[300],
   appBarTheme: const AppBarTheme(
