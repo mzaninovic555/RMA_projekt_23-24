@@ -66,7 +66,8 @@ class _HomePageState extends State<HomePage> {
           child: GNav(
             selectedIndex: selectedIndex,
             onTabChange: navigateBottomBar,
-            backgroundColor: Theme.of(context).colorScheme.background,
+            tabBorderRadius: 28.0,
+            rippleColor: Theme.of(context).hoverColor,
             gap: 8.0,
             padding: const EdgeInsets.all(16),
             tabs: const [
