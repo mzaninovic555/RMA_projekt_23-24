@@ -4,6 +4,7 @@ import 'package:medicationapp/pages/medication/medication.dart';
 import 'package:medicationapp/pages/pharmacies/pharmacies.dart';
 import 'package:medicationapp/pages/reminder_list/reminder_list.dart';
 import 'package:medicationapp/pages/settings/settings.dart';
+import 'package:medicationapp/theme/theme.dart';
 import 'package:provider/provider.dart';
 
 import '../theme/theme_provider.dart';
@@ -19,7 +20,7 @@ class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
 
   final Map<String, Widget> pages = {
-    'ReminderList': const ReminderList(),
+    'Reminders': const ReminderList(),
     'Medication': const Medication(),
     'Pharmacies': const Pharmacies(),
     'Settings': const Settings(),
@@ -45,7 +46,12 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.sunny),
+          icon: Icon(
+            Provider.of<ThemeProvider>(context).themeData == lightMode
+                ? Icons.nightlight
+                : Icons.sunny,
+            color: Theme.of(context).appBarTheme.titleTextStyle?.color,
+          ),
           onPressed: () {
             Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
           },
