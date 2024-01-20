@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:medicationapp/pages/medication/add_medication.dart';
 
 import 'medication_data.dart';
 
@@ -21,7 +22,17 @@ class _MedicationState extends State<Medication> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          MedicationType newMedication = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddMedication(),
+              ));
+          setState(() {
+            mockMedication.add(newMedication);
+          });
+          // TODO add database etc.
+        },
         child: const Icon(Icons.add),
       ),
       body: ListView.separated(
@@ -29,7 +40,6 @@ class _MedicationState extends State<Medication> {
         separatorBuilder: (BuildContext context, int index) => const Divider(),
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
-
             leading: Text('${mockMedication[index].quantityRemaining}'),
             title: Text(mockMedication[index].name),
             trailing: Row(
