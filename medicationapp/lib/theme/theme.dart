@@ -12,7 +12,7 @@ ThemeData lightMode = ThemeData(
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.red,
     titleTextStyle: TextStyle(
-      color: Colors.white
+      color: Colors.black
     ),
   ),
   textTheme: const TextTheme(
