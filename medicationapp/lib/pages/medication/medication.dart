@@ -11,7 +11,7 @@ class Medication extends StatefulWidget {
 }
 
 class _MedicationState extends State<Medication> {
-  List<MedicationType> mockMedication = [
+  static List<MedicationType> mockMedication = [
     MedicationType('Ibuprofen', 20, 2),
     MedicationType('Cijanid tablet', 20, 2),
     MedicationType('Xanax', 5, 0.5),
@@ -46,15 +46,23 @@ class _MedicationState extends State<Medication> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    var editedMedication =
+                        await showEditDialog(mockMedication[index]);
+                    setState(() {
+                      mockMedication[index] = editedMedication!;
+                    });
+                  },
                   child: const Icon(Icons.edit),
                 ),
                 const SizedBox(width: 5),
                 ElevatedButton(
                   onPressed: () async {
-                    var modalValue = await showRefillDialog(mockMedication[index]);
+                    var modalValue =
+                        await showRefillDialog(mockMedication[index]);
                     setState(() {
-                      mockMedication[index].quantityRemaining += modalValue ?? 0;
+                      mockMedication[index].quantityRemaining +=
+                          modalValue ?? 0;
                     });
                   },
                   child: const Icon(Icons.add_circle),
@@ -87,9 +95,86 @@ class _MedicationState extends State<Medication> {
         actions: [
           TextButton(
             onPressed: () {
-              print('test test ${editModalController.text}');
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Medication refilled!'),
+                ),
+              );
               Navigator.pop(
                   context, int.tryParse(editModalController.text) ?? 0);
+            },
+            child: const Text('Refill'),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<MedicationType?> showEditDialog(MedicationType medication) {
+    final formKey = GlobalKey<FormState>();
+    final nameController = TextEditingController(text: medication.name);
+    final dosageController = TextEditingController(text: medication.dosage.toString());
+
+    return showDialog<MedicationType?>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Refill ${medication.name}'),
+        content: Form(
+          key: formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              TextFormField(
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.medication),
+                  hintText: 'Name on the label',
+                  label: Text('Name *'),
+                ),
+                controller: nameController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter the name of the medication';
+                  }
+                  return null;
+                },
+              ),
+              TextFormField(
+                decoration: const InputDecoration(
+                  icon: Icon(Icons.medication),
+                  hintText: 'How many do you take at a time?',
+                  label: Text('Dosage *'),
+                ),
+                keyboardType: TextInputType.number,
+                controller: dosageController,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Dosage is required';
+                  }
+                  if (double.tryParse(value) == 0.0) {
+                    return 'Your dosage cannot be zero';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              if (formKey.currentState!.validate()) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Medication edited successfully'),
+                  ),
+                );
+
+                var editedMedication = MedicationType(
+                    nameController.text,
+                    medication.quantityRemaining,
+                    double.tryParse(dosageController.text)!);
+                Navigator.pop(context, editedMedication);
+              }
             },
             child: const Text('Refill'),
           )
