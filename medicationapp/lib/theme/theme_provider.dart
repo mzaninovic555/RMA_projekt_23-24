@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:medicationapp/services/local_data_service.dart';
 import 'package:medicationapp/theme/theme.dart';
 
 class ThemeProvider with ChangeNotifier {
-  ThemeData _themeData = lightMode;
+  late ThemeData _themeData;
+
+
+  ThemeProvider(LocalDataService localDataService) {
+    _themeData = localDataService.getIsDarkTheme() ? darkMode : lightMode;
+  }
 
   ThemeData get themeData => _themeData;
 
