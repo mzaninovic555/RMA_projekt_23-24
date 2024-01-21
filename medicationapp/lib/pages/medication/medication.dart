@@ -51,8 +51,11 @@ class _MedicationState extends State<Medication> {
                 ),
                 const SizedBox(width: 5),
                 ElevatedButton(
-                  onPressed: () {
-                    showRefillDialog(mockMedication[index]);
+                  onPressed: () async {
+                    var modalValue = await showRefillDialog(mockMedication[index]);
+                    setState(() {
+                      mockMedication[index].quantityRemaining += modalValue ?? 0;
+                    });
                   },
                   child: const Icon(Icons.add_circle),
                 ),
@@ -64,31 +67,34 @@ class _MedicationState extends State<Medication> {
     );
   }
 
-  Future showRefillDialog(MedicationType medication) => showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Refill ${medication.name}'),
-          content: TextFormField(
-            decoration: const InputDecoration(
-              icon: Icon(Icons.add_chart_sharp),
-              hintText: 'Do you have any amount currently',
-              label: Text('Quantity *'),
-            ),
-            keyboardType: TextInputType.number,
-            initialValue: medication.dosage.toString(),
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'If you don\'t have any medication currently, input zero';
-              }
-              return null;
-            },
+  Future<int?> showRefillDialog(MedicationType medication) {
+    var editModalController =
+        TextEditingController(text: medication.dosage.toString());
+    return showDialog<int?>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Refill ${medication.name}'),
+        content: TextFormField(
+          decoration: const InputDecoration(
+            icon: Icon(Icons.add_chart_sharp),
+            hintText: 'Refill amount',
+            label: Text('Refill'),
           ),
-          actions: [
-            TextButton(
-              onPressed: () {},
-              child: const Text('Refill'),
-            )
-          ],
+          keyboardType: TextInputType.number,
+          autofocus: true,
+          controller: editModalController,
         ),
-      );
+        actions: [
+          TextButton(
+            onPressed: () {
+              print('test test ${editModalController.text}');
+              Navigator.pop(
+                  context, int.tryParse(editModalController.text) ?? 0);
+            },
+            child: const Text('Refill'),
+          )
+        ],
+      ),
+    );
+  }
 }

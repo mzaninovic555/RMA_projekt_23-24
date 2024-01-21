@@ -7,7 +7,7 @@ class AddMedication extends StatelessWidget {
   AddMedication({super.key});
 
   final nameController = TextEditingController() ;
-  final quantityController = TextEditingController(text: '0.0') ;
+  final quantityController = TextEditingController(text: '0.0');
   final dosageController = TextEditingController() ;
 
   @override
