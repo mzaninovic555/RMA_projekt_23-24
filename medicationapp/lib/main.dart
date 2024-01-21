@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/home_page.dart';
 import 'package:medicationapp/services/local_data_service.dart';
+import 'package:medicationapp/theme/theme.dart';
 import 'package:medicationapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -18,13 +19,21 @@ class MedicationApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const HomePage(),
-      theme: Provider.of<ThemeProvider>(context).themeData,
-      // initialRoute: '/',
-      // routes: {
-      // },
-    );
+    return FutureBuilder(
+        future: LocalDataService.initLocalDataService(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          var localDataService = snapshot.data;
+          localDataService!.insertDefaults();
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            home: HomePage(localDataService),
+            theme: localDataService.getIsDarkTheme() ? lightMode : darkMode,
+          );
+        });
   }
 }

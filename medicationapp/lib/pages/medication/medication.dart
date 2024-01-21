@@ -51,7 +51,9 @@ class _MedicationState extends State<Medication> {
                 ),
                 const SizedBox(width: 5),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    showRefillDialog(mockMedication[index]);
+                  },
                   child: const Icon(Icons.add_circle),
                 ),
               ],
@@ -61,4 +63,32 @@ class _MedicationState extends State<Medication> {
       ),
     );
   }
+
+  Future showRefillDialog(MedicationType medication) => showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Refill ${medication.name}'),
+          content: TextFormField(
+            decoration: const InputDecoration(
+              icon: Icon(Icons.add_chart_sharp),
+              hintText: 'Do you have any amount currently',
+              label: Text('Quantity *'),
+            ),
+            keyboardType: TextInputType.number,
+            initialValue: medication.dosage.toString(),
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'If you don\'t have any medication currently, input zero';
+              }
+              return null;
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {},
+              child: const Text('Refill'),
+            )
+          ],
+        ),
+      );
 }
