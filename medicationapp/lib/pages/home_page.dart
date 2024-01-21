@@ -4,6 +4,7 @@ import 'package:medicationapp/pages/medication/medication.dart';
 import 'package:medicationapp/pages/pharmacies/pharmacies.dart';
 import 'package:medicationapp/pages/reminder_list/reminder_list.dart';
 import 'package:medicationapp/pages/settings/settings.dart';
+import 'package:medicationapp/services/local_data_service.dart';
 import 'package:medicationapp/theme/theme.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,20 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
+  late LocalDataService localDataService;
+
+  @override
+  void initState() {
+    super.initState();
+
+    LocalDataService.initLocalDataService().then((value) {
+      localDataService = value;
+      localDataService.insertDefaults();
+      Provider.of<ThemeProvider>(context, listen: false)
+          .setIsDarkMode(localDataService.getIsDarkTheme());
+    });
+
+  }
 
   final Map<String, Widget> pages = {
     'Reminders': const ReminderList(),
@@ -86,7 +101,7 @@ class _HomePageState extends State<HomePage> {
                 text: 'Medication',
               ),
               GButton(
-                icon: Icons.local_hospital,
+                icon: Icons.map,
                 text: 'Pharmacies',
               ),
               GButton(

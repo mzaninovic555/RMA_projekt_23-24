@@ -18,4 +18,12 @@ class ThemeProvider with ChangeNotifier {
       themeData = lightMode;
     }
   }
+
+  void setIsDarkMode(bool isDark) {
+    if (isDark) {
+      themeData = darkMode;
+    } else {
+      themeData = lightMode;
+    }
+  }
 }
