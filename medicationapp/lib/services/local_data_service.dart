@@ -26,4 +26,8 @@ class LocalDataService {
   bool getIsDarkTheme() {
     return preferences.getBool(DARK_MODE) ?? false;
   }
+
+  void setIsDarkTheme(bool isDarkMode) {
+    preferences.setBool(DARK_MODE, isDarkMode);
+  }
 }

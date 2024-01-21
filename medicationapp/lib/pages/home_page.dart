@@ -19,27 +19,28 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   int selectedIndex = 0;
-  late LocalDataService localDataService;
+  late final LocalDataService localDataService;
+  late final Map<String, Widget> pages;
 
   @override
   void initState() {
     super.initState();
-
     LocalDataService.initLocalDataService().then((value) {
-      localDataService = value;
+
+      setState(() {
+        localDataService = value;
+        pages = {
+          'Reminders': const ReminderList(),
+          'Medication': const Medication(),
+          'Pharmacies': const Pharmacies(),
+          'Settings': Settings(localDataService),
+        };
+      });
       localDataService.insertDefaults();
       Provider.of<ThemeProvider>(context, listen: false)
           .setIsDarkMode(localDataService.getIsDarkTheme());
     });
-
   }
-
-  final Map<String, Widget> pages = {
-    'Reminders': const ReminderList(),
-    'Medication': const Medication(),
-    'Pharmacies': const Pharmacies(),
-    'Settings': const Settings(),
-  };
 
   void navigateBottomBar(int index) {
     setState(() {
@@ -59,17 +60,6 @@ class _HomePageState extends State<HomePage> {
             fontSize: 24,
             fontWeight: FontWeight.bold,
           ),
-        ),
-        leading: IconButton(
-          icon: Icon(
-            Provider.of<ThemeProvider>(context).themeData == lightMode
-                ? Icons.nightlight
-                : Icons.sunny,
-            color: Theme.of(context).appBarTheme.titleTextStyle?.color,
-          ),
-          onPressed: () {
-            Provider.of<ThemeProvider>(context, listen: false).toggleTheme();
-          },
         ),
       ),
       body: pages.values.elementAt(selectedIndex),
