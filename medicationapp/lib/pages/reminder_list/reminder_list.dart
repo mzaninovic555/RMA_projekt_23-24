@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/medication/medication_data.dart';
 import 'package:medicationapp/pages/medication/multiselect.dart';
+import 'package:medicationapp/pages/reminder_list/edit_reminder_group.dart';
 import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
 import 'package:medicationapp/services/reminder_service.dart';
 
@@ -80,6 +81,12 @@ class _ReminderListState extends State<ReminderList> {
             ],
           ),
           const SizedBox(width: 8),
+        ],
+      ),
+      const SizedBox(height: 5,),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
           TextButton(
             onPressed: () async {
               setState(() {
@@ -103,21 +110,62 @@ class _ReminderListState extends State<ReminderList> {
           ),
           TextButton(
             onPressed: () async {
-              List<MedicationType> selectedTypes = await showDialog(
+              ReminderGroup newReminderGroup = await Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditReminderGroup(existingGroup: reminderGroup),
+                  ));
+
+              setState(() {
+                ReminderService.editReminderGroup(reminderGroup, newReminderGroup);
+              });
+            },
+            child: const Text('Edit'),
+          ),
+          TextButton(
+            onPressed: () async {
+              bool res = await showDialog(
                   context: context,
                   builder: (BuildContext context) =>
-                      MultiSelect(reminderGroup: reminderGroup));
-              setState(() {
-                ReminderService.addMedicationItemsToGroup(
-                    groupIndex, selectedTypes);
-              });
+                      AlertDialog(
+                        title: Text('Delete ${reminderGroup.title}'),
+                        content: const Text('Are you sure you want to delete this reminder group?'),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, false);
+                            },
+                            child: const Text('No'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.pop(context, true);
+                            },
+                            child: const Text('Yes'),
+                          ),
+                        ],
+                      ));
+
+              if (res) {
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Group deleted successfully'),
+                    ),
+                  );
+                }
+
+                setState(() {
+                  ReminderService.removeReminderGroup(reminderGroup);
+                });
+              }
             },
             child: const Text('Delete'),
           ),
         ],
       ),
       const SizedBox(
-        height: 15.0,
+        height: 5.0,
       ),
     ];
     medicationChildren.addAll(reminderGroup.medications.isEmpty
