@@ -32,4 +32,17 @@ class ReminderService {
   static void addNewReminderGroup(ReminderGroup reminderGroup) {
     mockMeds.add(reminderGroup);
   }
+
+  static void removeReminderGroup(ReminderGroup reminderGroup) {
+    mockMeds.remove(reminderGroup);
+  }
+
+  static void takeMedicationInGroup(ReminderGroup reminderGroup) {
+    var indexOf = mockMeds.indexOf(reminderGroup);
+
+    mockMeds[indexOf].medications = mockMeds[indexOf].medications.map((medication) {
+      medication.quantityRemaining -= medication.dosage.toInt();
+      return medication;
+    }).toList();
+  }
 }

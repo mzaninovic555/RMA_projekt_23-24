@@ -82,6 +82,14 @@ class _ReminderListState extends State<ReminderList> {
           const SizedBox(width: 8),
           TextButton(
             onPressed: () async {
+              setState(() {
+                ReminderService.takeMedicationInGroup(reminderGroup);
+              });
+            },
+            child: const Text('Take'),
+          ),
+          TextButton(
+            onPressed: () async {
               List<MedicationType> selectedTypes = await showDialog(
                   context: context,
                   builder: (BuildContext context) =>
@@ -92,6 +100,19 @@ class _ReminderListState extends State<ReminderList> {
               });
             },
             child: const Text('Add'),
+          ),
+          TextButton(
+            onPressed: () async {
+              List<MedicationType> selectedTypes = await showDialog(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      MultiSelect(reminderGroup: reminderGroup));
+              setState(() {
+                ReminderService.addMedicationItemsToGroup(
+                    groupIndex, selectedTypes);
+              });
+            },
+            child: const Text('Delete'),
           ),
         ],
       ),

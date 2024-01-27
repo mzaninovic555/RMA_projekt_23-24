@@ -7,7 +7,7 @@ class AddMedication extends StatelessWidget {
   AddMedication({super.key});
 
   final nameController = TextEditingController();
-  final quantityController = TextEditingController(text: '0.0');
+  final quantityController = TextEditingController(text: '0');
   final dosageController = TextEditingController();
 
   @override
@@ -77,7 +77,7 @@ class AddMedication extends StatelessWidget {
                   if (value == null || value.isEmpty) {
                     return 'Dosage is required';
                   }
-                  if (double.tryParse(value) == 0.0) {
+                  if (int.tryParse(value) == 0) {
                     return 'Your dosage cannot be zero';
                   }
                   return null;
@@ -94,7 +94,7 @@ class AddMedication extends StatelessWidget {
                     );
 
                     int quantity = int.tryParse(quantityController.text) ?? 0;
-                    double dosage = double.tryParse(
+                    int dosage = int.tryParse(
                         dosageController.text.replaceAll(',', '.'))!;
                     MedicationType result =
                         MedicationType(nameController.text, quantity, dosage);

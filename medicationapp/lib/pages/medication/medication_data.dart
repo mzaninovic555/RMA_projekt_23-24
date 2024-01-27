@@ -2,7 +2,7 @@
 class MedicationType {
   String name;
   int quantityRemaining;
-  double dosage;
+  int dosage;
 
   MedicationType(this.name, this.quantityRemaining, this.dosage);
 }

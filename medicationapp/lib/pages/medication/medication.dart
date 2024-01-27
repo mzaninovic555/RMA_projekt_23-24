@@ -170,7 +170,7 @@ class _MedicationState extends State<Medication> {
                   if (value == null || value.isEmpty) {
                     return 'Dosage is required';
                   }
-                  if (double.tryParse(value) == 0.0) {
+                  if (int.tryParse(value) == 0) {
                     return 'Your dosage cannot be zero';
                   }
                   return null;
@@ -230,7 +230,7 @@ class _MedicationState extends State<Medication> {
                 var editedMedication = MedicationType(
                     nameController.text,
                     medication.quantityRemaining,
-                    double.tryParse(dosageController.text)!);
+                    int.tryParse(dosageController.text)!);
                 Navigator.pop(context, editedMedication);
               }
             },
