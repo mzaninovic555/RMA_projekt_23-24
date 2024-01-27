@@ -41,7 +41,24 @@ class _MedicationState extends State<Medication> {
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             leading: Text('${mockMedication[index].quantityRemaining}'),
-            title: Text(mockMedication[index].name),
+            title: Column(
+              children: [
+                Text(
+                  mockMedication[index].name,
+                  style: const TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+                Text(
+                  'Dosage: ${mockMedication[index].dosage.toString()}',
+                  style: const TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
             trailing: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -113,7 +130,8 @@ class _MedicationState extends State<Medication> {
   Future<MedicationType?> showEditDialog(MedicationType medication) {
     final formKey = GlobalKey<FormState>();
     final nameController = TextEditingController(text: medication.name);
-    final dosageController = TextEditingController(text: medication.dosage.toString());
+    final dosageController =
+        TextEditingController(text: medication.dosage.toString());
 
     return showDialog<MedicationType?>(
       context: context,
@@ -161,6 +179,45 @@ class _MedicationState extends State<Medication> {
         ),
         actions: [
           TextButton(
+            onPressed: () async {
+              bool res = await showDialog(
+                context: context,
+                builder: (BuildContext context) => AlertDialog(
+                  title: const Text('Confirmation'),
+                  content: const Text(
+                      'Are you sure you want to delete this medication?'),
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context, false);
+                      },
+                      child: const Text('Cancel'),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          mockMedication.remove(medication);
+                        });
+                        Navigator.pop(context, true);
+                      },
+                      child: const Text('OK'),
+                    ),
+                  ],
+                ),
+              );
+
+              if (res && mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Medication edited successfully'),
+                  ),
+                );
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Delete'),
+          ),
+          TextButton(
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -168,7 +225,6 @@ class _MedicationState extends State<Medication> {
                     content: Text('Medication edited successfully'),
                   ),
                 );
-
                 var editedMedication = MedicationType(
                     nameController.text,
                     medication.quantityRemaining,
@@ -176,8 +232,8 @@ class _MedicationState extends State<Medication> {
                 Navigator.pop(context, editedMedication);
               }
             },
-            child: const Text('Refill'),
-          )
+            child: const Text('Edit'),
+          ),
         ],
       ),
     );

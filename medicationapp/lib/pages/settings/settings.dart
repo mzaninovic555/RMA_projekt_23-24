@@ -50,18 +50,6 @@ class _SettingsState extends State<Settings> {
           ),
         ),
         const Divider(height: 1.0),
-        Container(
-          height: 50,
-        ),
-        const Divider(height: 1.0),
-        Container(
-          height: 50,
-        ),
-        const Divider(height: 1.0),
-        Container(
-          height: 50,
-        ),
-        const Divider(height: 1.0),
       ],
     );
   }
