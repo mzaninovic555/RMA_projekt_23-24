@@ -55,14 +55,21 @@ class AddReminderGroup extends StatelessWidget {
               const SizedBox(height: 30),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   ElevatedButton(
                     onPressed: () async {
                       var selectedTimeOfDay = await showTimePicker(
-                        context: context,
-                        initialTime: TimeOfDay.now(),
-                        initialEntryMode: TimePickerEntryMode.dial,
-                      );
+                          context: context,
+                          initialTime: TimeOfDay.now(),
+                          initialEntryMode: TimePickerEntryMode.dial,
+                          builder: (BuildContext context, Widget? child) {
+                            return MediaQuery(
+                              data: MediaQuery.of(context)
+                                  .copyWith(alwaysUse24HourFormat: true),
+                              child: child!,
+                            );
+                          });
                       if (selectedTimeOfDay != null) {
                         timeOfDay = selectedTimeOfDay;
                       }
@@ -89,7 +96,8 @@ class AddReminderGroup extends StatelessWidget {
                       ),
                     );
 
-                    ReminderGroup result = ReminderGroup(nameController.text, timeOfDay!, medication);
+                    ReminderGroup result = ReminderGroup(
+                        nameController.text, timeOfDay!, medication);
                     Navigator.pop(context, result);
                   }
                 },
