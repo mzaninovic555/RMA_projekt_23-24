@@ -17,20 +17,22 @@ class _ReminderListState extends State<ReminderList> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        padding: const EdgeInsets.only(top: 15.0),
-        decoration: BoxDecoration(
-          border: BorderDirectional(
-            top: BorderSide(
-              color: Theme.of(context).colorScheme.secondary,
-              width: 1.0,
+      body: SingleChildScrollView(
+        child: Container(
+          padding: const EdgeInsets.only(top: 15.0, bottom: 80.0),
+          decoration: BoxDecoration(
+            border: BorderDirectional(
+              top: BorderSide(
+                color: Theme.of(context).colorScheme.secondary,
+                width: 1.0,
+              ),
             ),
           ),
-        ),
-        child: Column(
-          children: ReminderService.getReminderGroups()
-              .map((group) => _mapReminderGroupToWidget(group))
-              .toList(),
+          child: Column(
+            children: ReminderService.getReminderGroups()
+                .map((group) => _mapReminderGroupToWidget(group))
+                .toList(),
+          ),
         ),
       ),
       floatingActionButton: FloatingActionButton(
@@ -41,29 +43,53 @@ class _ReminderListState extends State<ReminderList> {
   }
 
   Widget _mapReminderGroupToWidget(ReminderGroup reminderGroup) {
-    List<Widget> children = [
-      Text(
-        reminderGroup.title,
-        style: const TextStyle(
-          fontWeight: FontWeight.w800,
-          fontSize: 24.0,
-        ),
+    List<Widget> medicationChildren = [
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            reminderGroup.title,
+            style: const TextStyle(
+              fontWeight: FontWeight.w800,
+              fontSize: 24.0,
+            ),
+          ),
+          const SizedBox(width: 8),
+          IconButton(
+            onPressed: () {},
+            icon: const Icon(Icons.add_circle),
+          )
+        ],
       ),
       const SizedBox(
         height: 15.0,
       ),
     ];
-    children.addAll(reminderGroup.medications
+    medicationChildren.addAll(reminderGroup.medications
         .map((medication) => _mapMedicationToWidget(medication))
         .toList());
-    children.add(const Divider());
+    medicationChildren.add(const SizedBox(
+      height: 10.0,
+    ));
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: children,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: medicationChildren,
+          ),
+        ),
+        Divider(
+          thickness: 0.5,
+          color: Colors.grey[700],
+        ),
+        const SizedBox(
+          height: 10.0,
+        )
+      ],
     );
   }
 
@@ -72,29 +98,14 @@ class _ReminderListState extends State<ReminderList> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: <Widget>[
-          const ListTile(
-            leading: Icon(Icons.album),
-            title: Text('The Enchanted Nightingale'),
-            subtitle: Text('Music by Julie Gable. Lyrics by Sidney Stein.'),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: <Widget>[
-              TextButton(
-                child: const Text('BUY TICKETS'),
-                onPressed: () {
-                  /* ... */
-                },
-              ),
-              const SizedBox(width: 8),
-              TextButton(
-                child: const Text('LISTEN'),
-                onPressed: () {
-                  /* ... */
-                },
-              ),
-              const SizedBox(width: 8),
-            ],
+          ListTile(
+            leading: const Icon(Icons.medication),
+            title: Text(medication.name),
+            subtitle: Text('${medication.quantityRemaining} remaining.'),
+            trailing: TextButton(
+              child: const Text('REMOVE'),
+              onPressed: () {},
+            ),
           ),
         ],
       ),
