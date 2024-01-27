@@ -40,7 +40,13 @@ class _MedicationState extends State<Medication> {
         separatorBuilder: (BuildContext context, int index) => const Divider(),
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
-            leading: Text('${mockMedication[index].quantityRemaining}'),
+            leading: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('${mockMedication[index].quantityRemaining}'),
+                const Text('remaining')
+              ],
+            ),
             title: Column(
               children: [
                 Text(
