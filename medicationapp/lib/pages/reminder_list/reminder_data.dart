@@ -4,7 +4,7 @@ import 'package:medicationapp/pages/medication/medication_data.dart';
 /// Class for a group of medications all sharing a certain time.
 class ReminderGroup {
   String title;
-  DateTime timeOfReminder;
+  TimeOfDay timeOfReminder;
   List<MedicationType> medications;
   Color? color;
 
@@ -14,7 +14,7 @@ class ReminderGroup {
 /// Class for a singular medication item which is not grouped.
 class ReminderItem {
   String title;
-  DateTime timeOfReminder;
+  TimeOfDay timeOfReminder;
   MedicationType medication;
 
   ReminderItem(this.title, this.timeOfReminder, this.medication);

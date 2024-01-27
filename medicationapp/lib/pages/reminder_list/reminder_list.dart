@@ -4,6 +4,8 @@ import 'package:medicationapp/pages/medication/multiselect.dart';
 import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
 import 'package:medicationapp/services/reminder_service.dart';
 
+import 'add_reminder_group.dart';
+
 class ReminderList extends StatefulWidget {
   const ReminderList({super.key});
 
@@ -36,7 +38,17 @@ class _ReminderListState extends State<ReminderList> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () async {
+          ReminderGroup newReminderGroup = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddReminderGroup(),
+              ));
+
+          setState(() {
+            ReminderService.addNewReminderGroup(newReminderGroup);
+          });
+        },
         child: const Icon(Icons.add),
       ),
     );
@@ -68,7 +80,7 @@ class _ReminderListState extends State<ReminderList> {
             ],
           ),
           const SizedBox(width: 8),
-          IconButton(
+          TextButton(
             onPressed: () async {
               List<MedicationType> selectedTypes = await showDialog(
                   context: context,
@@ -79,8 +91,8 @@ class _ReminderListState extends State<ReminderList> {
                     groupIndex, selectedTypes);
               });
             },
-            icon: const Icon(Icons.add_circle),
-          )
+            child: const Text('Add'),
+          ),
         ],
       ),
       const SizedBox(

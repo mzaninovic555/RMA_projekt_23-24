@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/medication/medication_data.dart';
 
 import '../pages/reminder_list/reminder_data.dart';
@@ -5,15 +6,15 @@ import 'medication_service.dart';
 
 class ReminderService {
   static List<ReminderGroup> mockMeds = [
-    ReminderGroup('Morning', DateTime.now(), [
+    ReminderGroup('Morning', TimeOfDay.now(), [
       MedicationService.mockMedication[0],
       MedicationService.mockMedication[1],
       MedicationService.mockMedication[2],
     ]),
-    ReminderGroup('Evening', DateTime.now(), [
+    ReminderGroup('Evening', TimeOfDay.now(), [
       MedicationService.mockMedication[2],
     ]),
-    ReminderGroup('Night', DateTime.now(), []),
+    ReminderGroup('Night', TimeOfDay.now(), []),
   ];
   
   static List<ReminderGroup> getReminderGroups() {
@@ -26,5 +27,9 @@ class ReminderService {
 
   static void addMedicationItemsToGroup(int groupIndex, List<MedicationType> items) {
     mockMeds[groupIndex].medications.addAll(items);
+  }
+
+  static void addNewReminderGroup(ReminderGroup reminderGroup) {
+    mockMeds.add(reminderGroup);
   }
 }

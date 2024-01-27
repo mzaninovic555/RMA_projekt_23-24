@@ -6,9 +6,9 @@ final _formKey = GlobalKey<FormState>();
 class AddMedication extends StatelessWidget {
   AddMedication({super.key});
 
-  final nameController = TextEditingController() ;
+  final nameController = TextEditingController();
   final quantityController = TextEditingController(text: '0.0');
-  final dosageController = TextEditingController() ;
+  final dosageController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -94,8 +94,10 @@ class AddMedication extends StatelessWidget {
                     );
 
                     int quantity = int.tryParse(quantityController.text) ?? 0;
-                    double dosage = double.tryParse(dosageController.text.replaceAll(',', '.'))!;
-                    MedicationType result = MedicationType(nameController.text, quantity, dosage);
+                    double dosage = double.tryParse(
+                        dosageController.text.replaceAll(',', '.'))!;
+                    MedicationType result =
+                        MedicationType(nameController.text, quantity, dosage);
                     Navigator.pop(context, result);
                   }
                 },
