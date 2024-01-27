@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/medication/medication_data.dart';
+import 'package:medicationapp/pages/medication/multiselect.dart';
 import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
-import 'package:medicationapp/services/medication_service.dart';
 import 'package:medicationapp/services/reminder_service.dart';
 
 class ReminderList extends StatefulWidget {
@@ -43,20 +43,42 @@ class _ReminderListState extends State<ReminderList> {
   }
 
   Widget _mapReminderGroupToWidget(ReminderGroup reminderGroup) {
+    int groupIndex = ReminderService.getReminderGroups().indexOf(reminderGroup);
+
     List<Widget> medicationChildren = [
       Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            reminderGroup.title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w800,
-              fontSize: 24.0,
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                reminderGroup.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 24.0,
+                ),
+              ),
+              Text(
+                reminderGroup.timeOfReminder.toString(),
+                style: const TextStyle(
+                  fontSize: 12.0,
+                ),
+              ),
+            ],
           ),
           const SizedBox(width: 8),
           IconButton(
-            onPressed: () {},
+            onPressed: () async {
+              List<MedicationType> selectedTypes = await showDialog(
+                  context: context,
+                  builder: (BuildContext context) =>
+                      MultiSelect(reminderGroup: reminderGroup));
+              setState(() {
+                ReminderService.addMedicationItemsToGroup(
+                    groupIndex, selectedTypes);
+              });
+            },
             icon: const Icon(Icons.add_circle),
           )
         ],
@@ -65,9 +87,11 @@ class _ReminderListState extends State<ReminderList> {
         height: 15.0,
       ),
     ];
-    medicationChildren.addAll(reminderGroup.medications
-        .map((medication) => _mapMedicationToWidget(medication))
-        .toList());
+    medicationChildren.addAll(reminderGroup.medications.isEmpty
+        ? [const Text('No medication in this group')]
+        : reminderGroup.medications
+            .map((medication) => _mapMedicationToWidget(groupIndex, medication))
+            .toList());
     medicationChildren.add(const SizedBox(
       height: 10.0,
     ));
@@ -93,7 +117,7 @@ class _ReminderListState extends State<ReminderList> {
     );
   }
 
-  Widget _mapMedicationToWidget(MedicationType medication) {
+  Widget _mapMedicationToWidget(int groupIndex, MedicationType medication) {
     return Card(
       child: Column(
         mainAxisSize: MainAxisSize.min,
@@ -104,7 +128,12 @@ class _ReminderListState extends State<ReminderList> {
             subtitle: Text('${medication.quantityRemaining} remaining.'),
             trailing: TextButton(
               child: const Text('REMOVE'),
-              onPressed: () {},
+              onPressed: () {
+                setState(() {
+                  ReminderService.removeFromReminderGroup(
+                      groupIndex, medication);
+                });
+              },
             ),
           ),
         ],

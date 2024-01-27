@@ -1,3 +1,5 @@
+import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
+
 import '../pages/medication/medication_data.dart';
 
 class MedicationService {
@@ -7,4 +9,10 @@ class MedicationService {
     MedicationType('Xanax', 5, 0.5),
     MedicationType('Metanfetamin tablet', 15, 1),
   ];
+
+  static List<MedicationType> getMedicationNotInGroup(ReminderGroup group) {
+    return mockMedication
+        .where((medication) => !group.medications.contains(medication))
+        .toList();
+  }
 }
