@@ -6,10 +6,11 @@ import '../medication/medication_data.dart';
 
 final _formKey = GlobalKey<FormState>();
 
+//ignore: must_be_immutable
 class EditReminderGroup extends StatefulWidget {
   final ReminderGroup existingGroup;
 
-  late final nameController;
+  late final TextEditingController nameController;
   TimeOfDay? timeOfDay = TimeOfDay.now();
   List<MedicationType> medication = [];
 

@@ -6,6 +6,7 @@ import '../medication/medication_data.dart';
 
 final _formKey = GlobalKey<FormState>();
 
+//ignore: must_be_immutable
 class AddReminderGroup extends StatelessWidget {
   AddReminderGroup({super.key});
 
