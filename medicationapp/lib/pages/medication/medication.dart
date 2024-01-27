@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/medication/add_medication.dart';
 
+import '../../services/medication_service.dart';
 import 'medication_data.dart';
 
 class Medication extends StatefulWidget {
@@ -11,12 +12,7 @@ class Medication extends StatefulWidget {
 }
 
 class _MedicationState extends State<Medication> {
-  static List<MedicationType> mockMedication = [
-    MedicationType('Ibuprofen', 20, 2),
-    MedicationType('Cijanid tablet', 20, 2),
-    MedicationType('Xanax', 5, 0.5),
-    MedicationType('Metanfetamin tablet', 15, 1),
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -29,35 +25,35 @@ class _MedicationState extends State<Medication> {
                 builder: (context) => AddMedication(),
               ));
           setState(() {
-            mockMedication.add(newMedication);
+            MedicationService.mockMedication.add(newMedication);
           });
           // TODO add database etc.
         },
         child: const Icon(Icons.add),
       ),
       body: ListView.separated(
-        itemCount: mockMedication.length,
+        itemCount: MedicationService.mockMedication.length,
         separatorBuilder: (BuildContext context, int index) => const Divider(),
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('${mockMedication[index].quantityRemaining}'),
+                Text('${MedicationService.mockMedication[index].quantityRemaining}'),
                 const Text('remaining')
               ],
             ),
             title: Column(
               children: [
                 Text(
-                  mockMedication[index].name,
+                  MedicationService.mockMedication[index].name,
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
                 Text(
-                  'Dosage: ${mockMedication[index].dosage.toString()}',
+                  'Dosage: ${MedicationService.mockMedication[index].dosage.toString()}',
                   style: const TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.bold,
@@ -71,9 +67,9 @@ class _MedicationState extends State<Medication> {
                 ElevatedButton(
                   onPressed: () async {
                     var editedMedication =
-                        await showEditDialog(mockMedication[index]);
+                        await showEditDialog(MedicationService.mockMedication[index]);
                     setState(() {
-                      mockMedication[index] = editedMedication!;
+                      MedicationService.mockMedication[index] = editedMedication!;
                     });
                   },
                   child: const Icon(Icons.edit),
@@ -82,9 +78,9 @@ class _MedicationState extends State<Medication> {
                 ElevatedButton(
                   onPressed: () async {
                     var modalValue =
-                        await showRefillDialog(mockMedication[index]);
+                        await showRefillDialog(MedicationService.mockMedication[index]);
                     setState(() {
-                      mockMedication[index].quantityRemaining +=
+                      MedicationService.mockMedication[index].quantityRemaining +=
                           modalValue ?? 0;
                     });
                   },
@@ -202,7 +198,7 @@ class _MedicationState extends State<Medication> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          mockMedication.remove(medication);
+                          MedicationService.mockMedication.remove(medication);
                         });
                         Navigator.pop(context, true);
                       },

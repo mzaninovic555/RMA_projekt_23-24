@@ -1,16 +1,16 @@
-import 'package:medicationapp/pages/medication/medication_data.dart';
-
 import '../pages/reminder_list/reminder_data.dart';
+import 'medication_service.dart';
 
 class ReminderService {
   static List<ReminderGroup> getReminderGroups() {
     return [
       ReminderGroup('Morning', DateTime.now(), [
-        MedicationType('Test 1', 1, 2),
-        MedicationType('Test 2', 1, 2),
+        MedicationService.mockMedication[0],
+        MedicationService.mockMedication[1],
+        MedicationService.mockMedication[2],
       ]),
       ReminderGroup('Evening', DateTime.now(), [
-        MedicationType('Test 3', 1, 2),
+        MedicationService.mockMedication[2],
       ]),
       ReminderGroup('Night', DateTime.now(), []),
     ];

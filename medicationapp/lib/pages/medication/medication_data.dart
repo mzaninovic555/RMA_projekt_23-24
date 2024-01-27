@@ -1,3 +1,4 @@
+// Type of medication with name, dosage and quantity remaining
 class MedicationType {
   String name;
   int quantityRemaining;
