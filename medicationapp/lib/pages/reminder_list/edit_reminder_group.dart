@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/medication/multiselect.dart';
 import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
 
+import '../../common/time_formatter.dart';
 import '../medication/medication_data.dart';
 
 final _formKey = GlobalKey<FormState>();
@@ -96,7 +97,8 @@ class _EditReminderGroupState extends State<EditReminderGroup> {
                         child: const Text('Choose time'),
                       ),
                       const SizedBox(width: 10.0),
-                      Text(widget.timeOfDay.toString()),
+                      Text(TimeFormatter.formatTimeOfDay(
+                          context, widget.timeOfDay!)),
                     ],
                   ),
                   const SizedBox(height: 20.0),
@@ -105,8 +107,8 @@ class _EditReminderGroupState extends State<EditReminderGroup> {
                       setState(() async {
                         widget.medication = await showDialog(
                             context: context,
-                            builder: (BuildContext context) =>
-                                MultiSelect(reminderGroup: widget.existingGroup));
+                            builder: (BuildContext context) => MultiSelect(
+                                reminderGroup: widget.existingGroup));
                       });
                     },
                     child: const Text('Choose medication'),
@@ -125,7 +127,9 @@ class _EditReminderGroupState extends State<EditReminderGroup> {
                   );
 
                   ReminderGroup result = ReminderGroup(
-                      widget.nameController.text, widget.timeOfDay!, widget.medication);
+                      widget.nameController.text,
+                      widget.timeOfDay!,
+                      widget.medication);
                   Navigator.pop(context, result);
                 }
               },

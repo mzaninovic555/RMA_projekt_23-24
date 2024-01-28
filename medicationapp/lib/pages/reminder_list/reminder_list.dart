@@ -5,6 +5,7 @@ import 'package:medicationapp/pages/reminder_list/edit_reminder_group.dart';
 import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
 import 'package:medicationapp/services/reminder_service.dart';
 
+import '../../common/time_formatter.dart';
 import 'add_reminder_group.dart';
 
 class ReminderList extends StatefulWidget {
@@ -73,7 +74,7 @@ class _ReminderListState extends State<ReminderList> {
                 ),
               ),
               Text(
-                reminderGroup.timeOfReminder.toString(),
+                TimeFormatter.formatTimeOfDay(context, reminderGroup.timeOfReminder),
                 style: const TextStyle(
                   fontSize: 12.0,
                 ),
