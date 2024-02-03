@@ -52,7 +52,9 @@ class _SettingsState extends State<Settings> {
           ),
         ),
         const Divider(height: 1.0),
-        authWidget(140),
+        _authWidget(140),
+        const Divider(height: 1.0),
+        _backupWidget(),
         const Divider(height: 1.0),
       ],
     );
@@ -68,7 +70,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  Widget authWidget(double height) {
+  Widget _authWidget(double height) {
     bool isSignedIn = user != null;
 
     if (isSignedIn) {
@@ -129,5 +131,37 @@ class _SettingsState extends State<Settings> {
         ],
       ),
     );
+  }
+
+  Widget _backupWidget() {
+    return _settingsElement(Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Backup enabled',
+              style: _settingsTextStyle,
+            ),
+            Text(
+              'Your data is backed up every day at midnight',
+              style: TextStyle(
+                fontSize: 12.0,
+              ),
+            ),
+          ],
+        ),
+        Switch(
+          value: widget.localDataService.getIsBackupEnabled(),
+          onChanged: (value) => {
+            setState(() {
+              widget.localDataService.setIsBackupEnabled(value);
+            })
+          },
+        ),
+      ],
+    ));
   }
 }

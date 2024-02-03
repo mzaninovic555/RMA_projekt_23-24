@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalDataService {
   static const String _darkMode = 'darkMode';
+  static const String _isBackupEnabled = 'backupEnabled';
 
   final SharedPreferences preferences;
 
@@ -17,9 +18,14 @@ class LocalDataService {
 
   void insertDefaults() {
     if (preferences.getBool(_darkMode) == null) {
-      bool isDarkMode = SchedulerBinding.instance.platformDispatcher
-          .platformBrightness == Brightness.dark;
+      bool isDarkMode =
+          SchedulerBinding.instance.platformDispatcher.platformBrightness ==
+              Brightness.dark;
       preferences.setBool(_darkMode, isDarkMode);
+    }
+
+    if (preferences.getBool(_isBackupEnabled) == null) {
+      preferences.setBool(_isBackupEnabled, true);
     }
   }
 
@@ -29,5 +35,13 @@ class LocalDataService {
 
   void setIsDarkTheme(bool isDarkMode) {
     preferences.setBool(_darkMode, isDarkMode);
+  }
+
+  bool getIsBackupEnabled() {
+    return preferences.getBool(_isBackupEnabled) ?? true;
+  }
+
+  void setIsBackupEnabled(bool isDarkMode) {
+    preferences.setBool(_isBackupEnabled, isDarkMode);
   }
 }

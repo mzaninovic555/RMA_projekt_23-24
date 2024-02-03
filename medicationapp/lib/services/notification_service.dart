@@ -3,7 +3,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:medicationapp/services/reminder_service.dart';
 
 class Notifications {
-  static final cron = Cron();
+  static final _cron = Cron();
   static FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
@@ -46,7 +46,7 @@ class Notifications {
   }
 
   static void initCronSchedulerForNotifications() {
-    cron.schedule(Schedule.parse('*/1 * * * *'), () {
+    _cron.schedule(Schedule.parse('*/1 * * * *'), () {
       ReminderService.sendNotifications();
     });
   }
