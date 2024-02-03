@@ -70,6 +70,10 @@ class ReminderService {
     mockMeds.remove(reminderGroup);
   }
 
+  static void removeMedicationFromReminders(MedicationType medication) {
+    mockMeds.forEach((reminder) => reminder.medications.remove(medication));
+  }
+
   static void takeMedicationInGroup(ReminderGroup reminderGroup) {
     var indexOf = mockMeds.indexOf(reminderGroup);
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/medication/add_medication.dart';
+import 'package:medicationapp/services/reminder_service.dart';
 
 import '../../services/medication_service.dart';
 import 'medication_data.dart';
@@ -68,9 +69,11 @@ class _MedicationState extends State<Medication> {
                   onPressed: () async {
                     var editedMedication =
                         await showEditDialog(MedicationService.mockMedication[index]);
-                    setState(() {
-                      MedicationService.mockMedication[index] = editedMedication!;
-                    });
+                    if (editedMedication != null) {
+                      setState(() {
+                        MedicationService.mockMedication[index] = editedMedication!;
+                      });
+                    }
                   },
                   child: const Icon(Icons.edit),
                 ),
@@ -138,7 +141,7 @@ class _MedicationState extends State<Medication> {
     return showDialog<MedicationType?>(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text('Refill ${medication.name}'),
+        title: Text('Edit ${medication.name}'),
         content: Form(
           key: formKey,
           child: Column(
@@ -181,6 +184,7 @@ class _MedicationState extends State<Medication> {
         ),
         actions: [
           TextButton(
+            child: const Text('Delete'),
             onPressed: () async {
               bool res = await showDialog(
                 context: context,
@@ -191,7 +195,7 @@ class _MedicationState extends State<Medication> {
                   actions: [
                     TextButton(
                       onPressed: () {
-                        Navigator.pop(context, false);
+                        Navigator.pop(context, null);
                       },
                       child: const Text('Cancel'),
                     ),
@@ -199,6 +203,7 @@ class _MedicationState extends State<Medication> {
                       onPressed: () {
                         setState(() {
                           MedicationService.mockMedication.remove(medication);
+                          ReminderService.removeMedicationFromReminders(medication);
                         });
                         Navigator.pop(context, true);
                       },
@@ -211,15 +216,15 @@ class _MedicationState extends State<Medication> {
               if (res && mounted) {
                 ScaffoldMessenger.of(context).showSnackBar(
                   const SnackBar(
-                    content: Text('Medication edited successfully'),
+                    content: Text('Medication deleted successfully'),
                   ),
                 );
                 Navigator.pop(context);
               }
             },
-            child: const Text('Delete'),
           ),
           TextButton(
+            child: const Text('Edit'),
             onPressed: () {
               if (formKey.currentState!.validate()) {
                 ScaffoldMessenger.of(context).showSnackBar(
@@ -234,7 +239,6 @@ class _MedicationState extends State<Medication> {
                 Navigator.pop(context, editedMedication);
               }
             },
-            child: const Text('Edit'),
           ),
         ],
       ),
