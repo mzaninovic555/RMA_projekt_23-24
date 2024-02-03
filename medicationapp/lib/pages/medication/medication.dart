@@ -13,8 +13,6 @@ class Medication extends StatefulWidget {
 }
 
 class _MedicationState extends State<Medication> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +38,8 @@ class _MedicationState extends State<Medication> {
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('${MedicationService.mockMedication[index].quantityRemaining}'),
+                Text(
+                    '${MedicationService.mockMedication[index].quantityRemaining}'),
                 const Text('remaining')
               ],
             ),
@@ -67,11 +66,12 @@ class _MedicationState extends State<Medication> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    var editedMedication =
-                        await showEditDialog(MedicationService.mockMedication[index]);
+                    var editedMedication = await showEditDialog(
+                        MedicationService.mockMedication[index]);
                     if (editedMedication != null) {
                       setState(() {
-                        MedicationService.mockMedication[index] = editedMedication!;
+                        MedicationService.mockMedication[index] =
+                            editedMedication!;
                       });
                     }
                   },
@@ -80,11 +80,11 @@ class _MedicationState extends State<Medication> {
                 const SizedBox(width: 5),
                 ElevatedButton(
                   onPressed: () async {
-                    var modalValue =
-                        await showRefillDialog(MedicationService.mockMedication[index]);
+                    var modalValue = await showRefillDialog(
+                        MedicationService.mockMedication[index]);
                     setState(() {
-                      MedicationService.mockMedication[index].quantityRemaining +=
-                          modalValue ?? 0;
+                      MedicationService.mockMedication[index]
+                          .quantityRemaining += modalValue ?? 0;
                     });
                   },
                   child: const Icon(Icons.add_circle),
@@ -190,8 +190,18 @@ class _MedicationState extends State<Medication> {
                 context: context,
                 builder: (BuildContext context) => AlertDialog(
                   title: const Text('Confirmation'),
-                  content: const Text(
-                      'Are you sure you want to delete this medication?'),
+                  content: const Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text('Are you sure you want to delete this medication?'),
+                      Text(
+                        'This will also remove it from any reminder group',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
                   actions: [
                     TextButton(
                       onPressed: () {
@@ -203,7 +213,8 @@ class _MedicationState extends State<Medication> {
                       onPressed: () {
                         setState(() {
                           MedicationService.mockMedication.remove(medication);
-                          ReminderService.removeMedicationFromReminders(medication);
+                          ReminderService.removeMedicationFromReminders(
+                              medication);
                         });
                         Navigator.pop(context, true);
                       },

@@ -71,7 +71,9 @@ class ReminderService {
   }
 
   static void removeMedicationFromReminders(MedicationType medication) {
-    mockMeds.forEach((reminder) => reminder.medications.remove(medication));
+    for (var reminder in mockMeds) {
+      reminder.medications.remove(medication);
+    }
   }
 
   static void takeMedicationInGroup(ReminderGroup reminderGroup) {
