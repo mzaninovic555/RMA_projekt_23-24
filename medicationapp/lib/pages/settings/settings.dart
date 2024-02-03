@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medicationapp/services/local_data_service.dart';
 import 'package:medicationapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
+
+import '../../auth/auth.dart';
 
 class Settings extends StatefulWidget {
   final LocalDataService localDataService;
@@ -13,6 +16,8 @@ class Settings extends StatefulWidget {
 }
 
 class _SettingsState extends State<Settings> {
+  final User? user = Auth().currentUser;
+
   static const TextStyle _settingsTextStyle = TextStyle(
     fontSize: 22.0,
     fontWeight: FontWeight.bold,
@@ -23,34 +28,82 @@ class _SettingsState extends State<Settings> {
     return ListView(
       children: [
         const Divider(height: 1.0),
-        SizedBox(
-          height: 70,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30.0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text(
-                  'Dark mode',
-                  style: _settingsTextStyle,
-                ),
-                Switch(
-                  value: widget.localDataService.getIsDarkTheme(),
-                  onChanged: (value) => {
-                    setState(() {
-                      widget.localDataService.setIsDarkTheme(value);
-                      Provider.of<ThemeProvider>(context, listen: false)
-                          .setIsDarkMode(
-                              widget.localDataService.getIsDarkTheme());
-                    })
-                  },
-                ),
-              ],
-            ),
+        _settingsElement(
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Dark mode',
+                style: _settingsTextStyle,
+              ),
+              Switch(
+                value: widget.localDataService.getIsDarkTheme(),
+                onChanged: (value) => {
+                  setState(() {
+                    widget.localDataService.setIsDarkTheme(value);
+                    Provider.of<ThemeProvider>(context, listen: false)
+                        .setIsDarkMode(
+                            widget.localDataService.getIsDarkTheme());
+                  })
+                },
+              ),
+            ],
           ),
         ),
         const Divider(height: 1.0),
+        authWidget(140),
+        const Divider(height: 1.0),
       ],
+    );
+  }
+
+  SizedBox _settingsElement(Widget child, {double height = 70}) {
+    return SizedBox(
+      height: height,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 30.0),
+        child: child,
+      ),
+    );
+  }
+
+  Widget authWidget(double height) {
+    bool isSignedIn = user != null;
+
+    if (isSignedIn) {
+      return _settingsElement(Row(
+        children: [
+          Text(user!.email!),
+          ElevatedButton(
+            onPressed: () {},
+            child: const Text('Sign out', style: _settingsTextStyle),
+          ),
+        ],
+      ));
+    }
+
+    return _settingsElement(height: 120,
+      Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text('User not signed in', style: _settingsTextStyle),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Sign in', style: _settingsTextStyle),
+              ),
+              ElevatedButton(
+                onPressed: () {},
+                child: const Text('Register', style: _settingsTextStyle),
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
