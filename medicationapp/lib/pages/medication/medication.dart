@@ -71,7 +71,7 @@ class _MedicationState extends State<Medication> {
                     if (editedMedication != null) {
                       setState(() {
                         MedicationService.mockMedication[index] =
-                            editedMedication!;
+                            editedMedication;
                       });
                     }
                   },
