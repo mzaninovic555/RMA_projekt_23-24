@@ -142,7 +142,7 @@ class _SettingsState extends State<Settings> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Backup enabled',
+              'Enable backup',
               style: _settingsTextStyle,
             ),
             Text(
@@ -154,12 +154,14 @@ class _SettingsState extends State<Settings> {
           ],
         ),
         Switch(
-          value: widget.localDataService.getIsBackupEnabled(),
-          onChanged: (value) => {
-            setState(() {
-              widget.localDataService.setIsBackupEnabled(value);
-            })
-          },
+          value: widget.localDataService.getIsBackupEnabled() && user != null,
+          onChanged: user != null
+              ? (value) => {
+                    setState(() {
+                      widget.localDataService.setIsBackupEnabled(value);
+                    })
+                  }
+              : null,
         ),
       ],
     ));
