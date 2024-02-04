@@ -1,5 +1,6 @@
 import 'package:cron/cron.dart';
 import 'package:medicationapp/auth/auth.dart';
+import 'package:medicationapp/services/database.dart';
 import 'package:medicationapp/services/local_data_service.dart';
 
 class BackupService {
@@ -12,11 +13,12 @@ class BackupService {
           Auth().currentUser == null) {
         return;
       }
-      await _backupData();
+      await backupData();
     });
   }
 
-  static Future<void> _backupData() async {
-    await null;
+  static Future<void> backupData() async {
+    await RepositoryService().backupMedication();
+    await RepositoryService().backupReminders();
   }
 }

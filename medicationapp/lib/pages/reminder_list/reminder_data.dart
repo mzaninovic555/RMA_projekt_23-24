@@ -2,15 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/medication/medication_data.dart';
 import 'package:uuid/uuid.dart';
 
+import '../../auth/auth.dart';
+
 /// Class for a group of medications all sharing a certain time.
 class ReminderGroup {
   String id;
   String title;
   TimeOfDay timeOfReminder;
   List<MedicationType> medications;
+  String? userId;
 
-  ReminderGroup(this.title, this.timeOfReminder, this.medications) : id = Uuid().v4();
-  ReminderGroup.withId(this.id, this.title, this.timeOfReminder, this.medications);
+  ReminderGroup(this.title, this.timeOfReminder, this.medications)
+      : id = Uuid().v4(),
+        userId = Auth().currentUser?.uid;
+
+  ReminderGroup.withId(
+      this.id, this.title, this.timeOfReminder, this.medications)
+      : userId = Auth().currentUser?.uid;
+
+  ReminderGroup.withIdAndUserId(
+      this.id, this.title, this.timeOfReminder, this.medications, this.userId);
 
   factory ReminderGroup.fromJson(dynamic json) {
     if (json['medications'] != null) {
@@ -19,23 +30,25 @@ class ReminderGroup {
           .map((medicationJson) => MedicationType.fromJson(medicationJson))
           .toList();
 
-      return ReminderGroup.withId(
+      return ReminderGroup.withIdAndUserId(
         json['id'] as String,
         json['title'] as String,
         TimeOfDay.fromDateTime(DateTime.parse(json['timeOfReminder'])),
         medications,
+        json['userId'] is String ? json['userId'] as String : null,
       );
     }
 
-    return ReminderGroup.withId(
+    return ReminderGroup.withIdAndUserId(
       json['id'] as String,
       json['title'] as String,
       TimeOfDay.fromDateTime(DateTime.parse(json['timeOfReminder'])),
       [],
+      json['userId'] is String ? json['userId'] as String : null,
     );
   }
 
-  Map toJson() {
+  Map<String, Object?> toJson() {
     List<Map> medications =
         this.medications.map((medication) => medication.toJson()).toList();
 
@@ -51,7 +64,8 @@ class ReminderGroup {
       'id': id,
       'title': title,
       'timeOfReminder': dateTimeTemp.toIso8601String(),
-      'medications': medications
+      'medications': medications,
+      'userId': userId,
     };
   }
 

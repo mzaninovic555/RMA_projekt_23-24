@@ -15,12 +15,13 @@ class MedicationService {
 
   static List<MedicationType> _medicationList = [];
 
-  static set setMedicationList(List<MedicationType>? newList) {
-    _medicationList = newList ?? [];
-  }
 
   static List<MedicationType> getMedication() {
     return _medicationList;
+  }
+
+  static void setMedication(List<MedicationType> newList) {
+    _medicationList = newList;
   }
 
   static void addMedication(

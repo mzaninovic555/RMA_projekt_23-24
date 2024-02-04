@@ -35,7 +35,7 @@ class ReminderService {
 
   static List<ReminderGroup> _reminderList = [];
 
-  static set setReminderList(List<ReminderGroup>? newList) {
+  static void setReminderList(List<ReminderGroup>? newList) {
     _reminderList = newList ?? [];
   }
 

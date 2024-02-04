@@ -1,7 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/auth/auth_page.dart';
+import 'package:medicationapp/services/backup_service.dart';
 import 'package:medicationapp/services/local_data_service.dart';
+import 'package:medicationapp/services/medication_service.dart';
+import 'package:medicationapp/services/reminder_service.dart';
 import 'package:medicationapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -55,6 +58,9 @@ class _SettingsState extends State<Settings> {
         _authWidget(140),
         const Divider(height: 1.0),
         _backupWidget(),
+        const Divider(height: 1.0),
+        _backupNowButton(),
+        _deleteDataButton(),
         const Divider(height: 1.0),
       ],
     );
@@ -162,6 +168,53 @@ class _SettingsState extends State<Settings> {
                     })
                   }
               : null,
+        ),
+      ],
+    ));
+  }
+
+  Widget _backupNowButton() {
+    bool isSignedIn = user != null;
+
+    if (!isSignedIn) {
+      return const SizedBox();
+    }
+
+    return _settingsElement(Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Backup now',
+          style: _settingsTextStyle,
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            await BackupService.backupData();
+          },
+          child: Text('Backup now'),
+        ),
+      ],
+    ));
+  }
+
+  Widget _deleteDataButton() {
+    return _settingsElement(Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Delete all data',
+          style: _settingsTextStyle,
+        ),
+        ElevatedButton(
+          onPressed: () {
+            widget.localDataService.preferences.remove('medicationData');
+            widget.localDataService.preferences.remove('reminderData');
+            setState(() {
+              MedicationService.setMedication([]);
+              ReminderService.setReminderList([]);
+            });
+          },
+          child: const Text('Delete'),
         ),
       ],
     ));
