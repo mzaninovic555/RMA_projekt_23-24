@@ -10,11 +10,7 @@ class ReminderService {
     ReminderGroup(
         'Morning',
         TimeOfDay(
-            hour: TimeOfDay
-                .now()
-                .hour, minute: TimeOfDay
-            .now()
-            .minute + 1),
+            hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 1),
         [
           MedicationService.mockMedication[0],
           MedicationService.mockMedication[1],
@@ -23,22 +19,14 @@ class ReminderService {
     ReminderGroup(
         'Evening',
         TimeOfDay(
-            hour: TimeOfDay
-                .now()
-                .hour, minute: TimeOfDay
-            .now()
-            .minute + 2),
+            hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 2),
         [
           MedicationService.mockMedication[2],
         ]),
     ReminderGroup(
         'Night',
         TimeOfDay(
-            hour: TimeOfDay
-                .now()
-                .hour, minute: TimeOfDay
-            .now()
-            .minute + 3),
+            hour: TimeOfDay.now().hour, minute: TimeOfDay.now().minute + 3),
         []),
   ];
 
@@ -52,13 +40,13 @@ class ReminderService {
     return _reminderList;
   }
 
-  static void removeFromReminderGroup(int groupIndex,
-      MedicationType medicationType) {
+  static void removeFromReminderGroup(
+      int groupIndex, MedicationType medicationType) {
     _reminderList[groupIndex].medications.remove(medicationType);
   }
 
-  static void addMedicationItemsToGroup(int groupIndex,
-      List<MedicationType> items) {
+  static void addMedicationItemsToGroup(
+      int groupIndex, List<MedicationType> items) {
     _reminderList[groupIndex].medications.addAll(items);
   }
 
@@ -66,8 +54,8 @@ class ReminderService {
     _reminderList.add(reminderGroup);
   }
 
-  static void editReminderGroup(ReminderGroup oldReminderGroup,
-      ReminderGroup newReminderGroup) {
+  static void editReminderGroup(
+      ReminderGroup oldReminderGroup, ReminderGroup newReminderGroup) {
     var indexOf = _reminderList.indexOf(oldReminderGroup);
     _reminderList[indexOf] = newReminderGroup;
   }
@@ -87,20 +75,29 @@ class ReminderService {
 
     _reminderList[indexOf].medications =
         _reminderList[indexOf].medications.map((medication) {
-          medication.quantityRemaining -= medication.dosage.toInt();
-          return medication;
-        }).toList();
+      medication.quantityRemaining -= medication.dosage.toInt();
+      return medication;
+    }).toList();
   }
 
   static void sendNotifications() {
     TimeOfDay now = TimeOfDay.now();
     for (final group in _reminderList) {
       if (group.timeOfReminder == now) {
-        String body = group.medications
-            .map((medication) => "${medication.name} ")
-            .reduce((value, element) => value + element);
-        Notifications.showNotification(title: group.title, body: body);
+        _createAndSendNotification(group);
       }
     }
+  }
+
+  static void _createAndSendNotification(ReminderGroup group) {
+    String notificationBody = '';
+    for (int i = 0; i < group.medications.length; i++) {
+      if (i == group.medications.length - 1) {
+        notificationBody += group.medications[i].name;
+      } else {
+        notificationBody += '${group.medications[i].name}, ';
+      }
+    }
+    Notifications.showNotification(title: group.title, body: notificationBody);
   }
 }

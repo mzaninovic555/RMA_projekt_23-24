@@ -12,8 +12,8 @@ class HomePage extends StatefulWidget {
 
   HomePage(this.localDataService, {super.key}) {
     pages = {
-      'Reminders': const ReminderList(),
-      'Medication': const Medication(),
+      'Reminders': ReminderList(localDataService),
+      'Medication': Medication(localDataService),
       'Pharmacies': const Pharmacies(),
       'Settings': Settings(localDataService),
     };

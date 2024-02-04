@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
+import 'package:medicationapp/services/local_data_service.dart';
 
 import '../pages/medication/medication_data.dart';
 
@@ -20,25 +23,52 @@ class MedicationService {
     return _medicationList;
   }
 
-  static void addMedication(MedicationType medication) {
+  static void addMedication(
+      MedicationType medication, LocalDataService localDataService) {
     _medicationList.add(medication);
+    _saveToPreferences(localDataService);
   }
 
-  static void setMedicationByIndex(int index, MedicationType medication) {
+  static void setMedicationByIndex(
+      int index, MedicationType medication, LocalDataService localDataService) {
     _medicationList[index] = medication;
+    _saveToPreferences(localDataService);
   }
 
-  static void refillMedicationByIndex(int index, int quantityToAdd) {
+  static void refillMedicationByIndex(
+      int index, int quantityToAdd, LocalDataService localDataService) {
     _medicationList[index].quantityRemaining += quantityToAdd;
+    _saveToPreferences(localDataService);
   }
 
-  static void removeFromMedicationList(MedicationType medication) {
+  static void removeFromMedicationList(
+      MedicationType medication, LocalDataService localDataService) {
     _medicationList.remove(medication);
+    _saveToPreferences(localDataService);
   }
 
   static List<MedicationType> getMedicationNotInGroup(ReminderGroup group) {
     return _medicationList
         .where((medication) => !group.medications.contains(medication))
+        .toList();
+  }
+
+  static void _saveToPreferences(LocalDataService localDataService) {
+    var medicationJson = json.encode(_medicationList);
+    localDataService.setMedication(medicationJson);
+  }
+
+  static Future<void> getFromPreferences(
+      LocalDataService localDataService) async {
+    var fromStorage = localDataService.getMedication();
+
+    if (fromStorage == null) {
+      _medicationList = [];
+      return;
+    }
+
+    _medicationList = (json.decode(fromStorage) as List)
+        .map((object) => MedicationType.fromJson(object))
         .toList();
   }
 }

@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/medication/add_medication.dart';
+import 'package:medicationapp/services/local_data_service.dart';
 import 'package:medicationapp/services/reminder_service.dart';
 
 import '../../services/medication_service.dart';
 import 'medication_data.dart';
 
+//ignore: must_be_immutable
 class Medication extends StatefulWidget {
-  const Medication({super.key});
+  LocalDataService localDataService;
+
+  Medication(this.localDataService, {super.key});
 
   @override
   State<Medication> createState() => _MedicationState();
@@ -41,7 +45,7 @@ class _MedicationState extends State<Medication> {
                   builder: (context) => AddMedication(),
                 ));
             setState(() {
-              MedicationService.addMedication(newMedication);
+              MedicationService.addMedication(newMedication, widget.localDataService);
             });
             // TODO add database etc.
           },
@@ -92,7 +96,7 @@ class _MedicationState extends State<Medication> {
                     if (editedMedication != null) {
                       setState(() {
                         MedicationService.setMedicationByIndex(
-                            index, editedMedication);
+                            index, editedMedication, widget.localDataService);
                       });
                     }
                   },
@@ -105,7 +109,7 @@ class _MedicationState extends State<Medication> {
                         medicationList[index]);
                     setState(() {
                       MedicationService.refillMedicationByIndex(
-                          index, modalValue ?? 0);
+                          index, modalValue ?? 0, widget.localDataService);
                     });
                   },
                   child: const Icon(Icons.add_circle),
@@ -123,7 +127,7 @@ class _MedicationState extends State<Medication> {
                 builder: (context) => AddMedication(),
               ));
           setState(() {
-            MedicationService.addMedication(newMedication);
+            MedicationService.addMedication(newMedication, widget.localDataService);
           });
           // TODO add database etc.
         },
@@ -248,7 +252,7 @@ class _MedicationState extends State<Medication> {
                       onPressed: () {
                         setState(() {
                           MedicationService.removeFromMedicationList(
-                              medication);
+                              medication, widget.localDataService);
                           ReminderService.removeMedicationFromReminders(
                               medication);
                         });

@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/scheduler.dart';
+import 'package:medicationapp/pages/medication/medication_data.dart';
 import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -8,6 +9,7 @@ class LocalDataService {
   static const String _darkMode = 'darkMode';
   static const String _isBackupEnabled = 'backupEnabled';
   static const String _reminderData = 'reminderData';
+  static const String _medicationData = 'medicationData';
 
   final SharedPreferences preferences;
 
@@ -29,10 +31,6 @@ class LocalDataService {
     if (preferences.getBool(_isBackupEnabled) == null) {
       preferences.setBool(_isBackupEnabled, true);
     }
-
-    if (preferences.getString(_reminderData) == null) {
-
-    }
   }
 
   bool getIsDarkTheme() {
@@ -51,5 +49,19 @@ class LocalDataService {
     preferences.setBool(_isBackupEnabled, isDarkMode);
   }
 
+  String? getReminderGroups() {
+    return preferences.getString(_reminderData);
+  }
 
+  String? getMedication() {
+    return preferences.getString(_medicationData);
+  }
+
+  void setReminderGroups(String data) {
+    preferences.setString(_reminderData, data);
+  }
+
+  void setMedication(String data) {
+    preferences.setString(_medicationData, data);
+  }
 }

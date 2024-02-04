@@ -6,10 +6,13 @@ import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
 import 'package:medicationapp/services/reminder_service.dart';
 
 import '../../common/time_formatter.dart';
+import '../../services/local_data_service.dart';
 import 'add_reminder_group.dart';
 
+//ignore: must_be_immutable
 class ReminderList extends StatefulWidget {
-  const ReminderList({super.key});
+  LocalDataService localDataService;
+  ReminderList(this.localDataService, {super.key});
 
   @override
   State<ReminderList> createState() => _ReminderListState();

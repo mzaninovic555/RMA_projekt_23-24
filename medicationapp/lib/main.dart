@@ -4,6 +4,7 @@ import 'package:medicationapp/firebase_options.dart';
 import 'package:medicationapp/pages/home_page.dart';
 import 'package:medicationapp/services/backup_service.dart';
 import 'package:medicationapp/services/local_data_service.dart';
+import 'package:medicationapp/services/medication_service.dart';
 import 'package:medicationapp/services/notification_service.dart';
 import 'package:medicationapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
@@ -24,6 +25,9 @@ void main() async {
 
   // init notification service
   await Notifications.initialize();
+
+  // initialize services
+  await MedicationService.getFromPreferences(localDataService);
 
   runApp(
     ChangeNotifierProvider(
