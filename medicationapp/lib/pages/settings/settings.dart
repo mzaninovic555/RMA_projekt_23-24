@@ -61,6 +61,7 @@ class _SettingsState extends State<Settings> {
         const Divider(height: 1.0),
         _backupNowButton(),
         _deleteDataButton(),
+        _fetchBackupButton(),
         const Divider(height: 1.0),
       ],
     );
@@ -175,7 +176,6 @@ class _SettingsState extends State<Settings> {
 
   Widget _backupNowButton() {
     bool isSignedIn = user != null;
-
     if (!isSignedIn) {
       return const SizedBox();
     }
@@ -191,13 +191,18 @@ class _SettingsState extends State<Settings> {
           onPressed: () async {
             await BackupService.backupData();
           },
-          child: Text('Backup now'),
+          child: const Text('Backup now'),
         ),
       ],
     ));
   }
 
   Widget _deleteDataButton() {
+    bool isSignedIn = user != null;
+    if (!isSignedIn) {
+      return const SizedBox();
+    }
+
     return _settingsElement(Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -215,6 +220,29 @@ class _SettingsState extends State<Settings> {
             });
           },
           child: const Text('Delete'),
+        ),
+      ],
+    ));
+  }
+
+  Widget _fetchBackupButton() {
+    bool isSignedIn = user != null;
+    if (!isSignedIn) {
+      return const SizedBox();
+    }
+
+    return _settingsElement(Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Text(
+          'Fetch latest',
+          style: _settingsTextStyle,
+        ),
+        ElevatedButton(
+          onPressed: () async {
+            await BackupService.fetchLatestBackup();
+          },
+          child: const Text('Fetch'),
         ),
       ],
     ));
