@@ -1,8 +1,6 @@
 import 'dart:ui';
 
 import 'package:flutter/scheduler.dart';
-import 'package:medicationapp/pages/medication/medication_data.dart';
-import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalDataService {

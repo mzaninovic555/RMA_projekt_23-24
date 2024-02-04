@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:medicationapp/pages/medication/medication.dart';
-import 'package:medicationapp/pages/pharmacies/pharmacies.dart';
 import 'package:medicationapp/pages/reminder_list/reminder_list.dart';
 import 'package:medicationapp/pages/settings/settings.dart';
 import 'package:medicationapp/services/local_data_service.dart';
@@ -14,10 +13,10 @@ class HomePage extends StatefulWidget {
     pages = {
       'Reminders': ReminderList(localDataService),
       'Medication': Medication(localDataService),
-      'Pharmacies': const Pharmacies(),
       'Settings': Settings(localDataService),
     };
   }
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -72,10 +71,6 @@ class _HomePageState extends State<HomePage> {
               GButton(
                 icon: Icons.medication,
                 text: 'Medication',
-              ),
-              GButton(
-                icon: Icons.map,
-                text: 'Pharmacies',
               ),
               GButton(
                 icon: Icons.settings,
