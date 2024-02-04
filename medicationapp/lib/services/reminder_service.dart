@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:medicationapp/pages/medication/medication_data.dart';
+import 'package:medicationapp/services/local_data_service.dart';
 
 import '../pages/reminder_list/reminder_data.dart';
 import 'medication_service.dart';
@@ -40,37 +43,47 @@ class ReminderService {
     return _reminderList;
   }
 
-  static void removeFromReminderGroup(
-      int groupIndex, MedicationType medicationType) {
+  static void removeFromReminderGroup(int groupIndex,
+      MedicationType medicationType, LocalDataService localDataService) {
     _reminderList[groupIndex].medications.remove(medicationType);
+    _saveToPreferences(localDataService);
   }
 
-  static void addMedicationItemsToGroup(
-      int groupIndex, List<MedicationType> items) {
+  static void addMedicationItemsToGroup(int groupIndex,
+      List<MedicationType> items, LocalDataService localDataService) {
     _reminderList[groupIndex].medications.addAll(items);
+    _saveToPreferences(localDataService);
   }
 
-  static void addNewReminderGroup(ReminderGroup reminderGroup) {
+  static void addNewReminderGroup(
+      ReminderGroup reminderGroup, LocalDataService localDataService) {
     _reminderList.add(reminderGroup);
+    _saveToPreferences(localDataService);
   }
 
-  static void editReminderGroup(
-      ReminderGroup oldReminderGroup, ReminderGroup newReminderGroup) {
+  static void editReminderGroup(ReminderGroup oldReminderGroup,
+      ReminderGroup newReminderGroup, LocalDataService localDataService) {
     var indexOf = _reminderList.indexOf(oldReminderGroup);
     _reminderList[indexOf] = newReminderGroup;
+    _saveToPreferences(localDataService);
   }
 
-  static void removeReminderGroup(ReminderGroup reminderGroup) {
+  static void removeReminderGroup(
+      ReminderGroup reminderGroup, LocalDataService localDataService) {
     _reminderList.remove(reminderGroup);
+    _saveToPreferences(localDataService);
   }
 
-  static void removeMedicationFromReminders(MedicationType medication) {
+  static void removeMedicationFromReminders(
+      MedicationType medication, LocalDataService localDataService) {
     for (var reminder in _reminderList) {
       reminder.medications.remove(medication);
+      _saveToPreferences(localDataService);
     }
   }
 
-  static void takeMedicationInGroup(ReminderGroup reminderGroup) {
+  static void takeMedicationInGroup(
+      ReminderGroup reminderGroup, LocalDataService localDataService) {
     var indexOf = _reminderList.indexOf(reminderGroup);
 
     _reminderList[indexOf].medications =
@@ -78,6 +91,7 @@ class ReminderService {
       medication.quantityRemaining -= medication.dosage.toInt();
       return medication;
     }).toList();
+    _saveToPreferences(localDataService);
   }
 
   static void sendNotifications() {
@@ -99,5 +113,24 @@ class ReminderService {
       }
     }
     Notifications.showNotification(title: group.title, body: notificationBody);
+  }
+
+  static void _saveToPreferences(LocalDataService localDataService) {
+    var reminderGroupJson = json.encode(_reminderList);
+    localDataService.setReminderGroups(reminderGroupJson);
+  }
+
+  static Future<void> getFromPreferences(
+      LocalDataService localDataService) async {
+    var fromStorage = localDataService.getReminderGroups();
+
+    if (fromStorage == null) {
+      _reminderList = [];
+      return;
+    }
+
+    _reminderList = (json.decode(fromStorage) as List)
+        .map((groupJson) => ReminderGroup.fromJson(groupJson))
+        .toList();
   }
 }

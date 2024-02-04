@@ -12,6 +12,7 @@ import 'add_reminder_group.dart';
 //ignore: must_be_immutable
 class ReminderList extends StatefulWidget {
   LocalDataService localDataService;
+
   ReminderList(this.localDataService, {super.key});
 
   @override
@@ -28,15 +29,14 @@ class _ReminderListState extends State<ReminderList> {
         body: const Padding(
           padding: EdgeInsets.all(30.0),
           child: Center(
-            child:
-              Text(
-                'No reminder groups currently added. '
-                'Add one with the floating button on the bottom',
-                style: TextStyle(
-                  fontSize: 22.0,
-                  fontWeight: FontWeight.bold,
-                ),
+            child: Text(
+              'No reminder groups currently added. '
+              'Add one with the floating button on the bottom',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.bold,
               ),
+            ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
@@ -48,7 +48,8 @@ class _ReminderListState extends State<ReminderList> {
                 ));
 
             setState(() {
-              ReminderService.addNewReminderGroup(newReminderGroup);
+              ReminderService.addNewReminderGroup(
+                  newReminderGroup, widget.localDataService);
             });
           },
           child: const Icon(Icons.add),
@@ -84,7 +85,8 @@ class _ReminderListState extends State<ReminderList> {
               ));
 
           setState(() {
-            ReminderService.addNewReminderGroup(newReminderGroup);
+            ReminderService.addNewReminderGroup(
+                newReminderGroup, widget.localDataService);
           });
         },
         child: const Icon(Icons.add),
@@ -130,7 +132,8 @@ class _ReminderListState extends State<ReminderList> {
           TextButton(
             onPressed: () async {
               setState(() {
-                ReminderService.takeMedicationInGroup(reminderGroup);
+                ReminderService.takeMedicationInGroup(
+                    reminderGroup, widget.localDataService);
               });
             },
             child: const Text('Take'),
@@ -143,7 +146,7 @@ class _ReminderListState extends State<ReminderList> {
                       MultiSelect(reminderGroup: reminderGroup));
               setState(() {
                 ReminderService.addMedicationItemsToGroup(
-                    groupIndex, selectedTypes);
+                    groupIndex, selectedTypes, widget.localDataService);
               });
             },
             child: const Text('Add'),
@@ -159,7 +162,7 @@ class _ReminderListState extends State<ReminderList> {
 
               setState(() {
                 ReminderService.editReminderGroup(
-                    reminderGroup, newReminderGroup);
+                    reminderGroup, newReminderGroup, widget.localDataService);
               });
             },
             child: const Text('Edit'),
@@ -198,7 +201,8 @@ class _ReminderListState extends State<ReminderList> {
                 }
 
                 setState(() {
-                  ReminderService.removeReminderGroup(reminderGroup);
+                  ReminderService.removeReminderGroup(
+                      reminderGroup, widget.localDataService);
                 });
               }
             },
@@ -254,7 +258,7 @@ class _ReminderListState extends State<ReminderList> {
               onPressed: () {
                 setState(() {
                   ReminderService.removeFromReminderGroup(
-                      groupIndex, medication);
+                      groupIndex, medication, widget.localDataService);
                 });
               },
             ),

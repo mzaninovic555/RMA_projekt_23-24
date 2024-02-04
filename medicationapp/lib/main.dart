@@ -6,6 +6,7 @@ import 'package:medicationapp/services/backup_service.dart';
 import 'package:medicationapp/services/local_data_service.dart';
 import 'package:medicationapp/services/medication_service.dart';
 import 'package:medicationapp/services/notification_service.dart';
+import 'package:medicationapp/services/reminder_service.dart';
 import 'package:medicationapp/theme/theme_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -28,6 +29,7 @@ void main() async {
 
   // initialize services
   await MedicationService.getFromPreferences(localDataService);
+  await ReminderService.getFromPreferences(localDataService);
 
   runApp(
     ChangeNotifierProvider(

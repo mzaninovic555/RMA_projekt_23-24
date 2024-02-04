@@ -26,10 +26,9 @@ class _MedicationState extends State<Medication> {
         body: const Padding(
           padding: EdgeInsets.all(30.0),
           child: Center(
-            child:
-            Text(
+            child: Text(
               'No medication currently added. '
-                  'Add one with the floating button on the bottom',
+              'Add one with the floating button on the bottom',
               style: TextStyle(
                 fontSize: 22.0,
                 fontWeight: FontWeight.bold,
@@ -45,7 +44,8 @@ class _MedicationState extends State<Medication> {
                   builder: (context) => AddMedication(),
                 ));
             setState(() {
-              MedicationService.addMedication(newMedication, widget.localDataService);
+              MedicationService.addMedication(
+                  newMedication, widget.localDataService);
             });
             // TODO add database etc.
           },
@@ -63,8 +63,7 @@ class _MedicationState extends State<Medication> {
             leading: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                    '${medicationList[index].quantityRemaining}'),
+                Text('${medicationList[index].quantityRemaining}'),
                 const Text('remaining')
               ],
             ),
@@ -91,8 +90,8 @@ class _MedicationState extends State<Medication> {
               children: [
                 ElevatedButton(
                   onPressed: () async {
-                    var editedMedication = await showEditDialog(
-                        medicationList[index]);
+                    var editedMedication =
+                        await showEditDialog(medicationList[index]);
                     if (editedMedication != null) {
                       setState(() {
                         MedicationService.setMedicationByIndex(
@@ -105,8 +104,8 @@ class _MedicationState extends State<Medication> {
                 const SizedBox(width: 5),
                 ElevatedButton(
                   onPressed: () async {
-                    var modalValue = await showRefillDialog(
-                        medicationList[index]);
+                    var modalValue =
+                        await showRefillDialog(medicationList[index]);
                     setState(() {
                       MedicationService.refillMedicationByIndex(
                           index, modalValue ?? 0, widget.localDataService);
@@ -127,7 +126,8 @@ class _MedicationState extends State<Medication> {
                 builder: (context) => AddMedication(),
               ));
           setState(() {
-            MedicationService.addMedication(newMedication, widget.localDataService);
+            MedicationService.addMedication(
+                newMedication, widget.localDataService);
           });
           // TODO add database etc.
         },
@@ -254,7 +254,7 @@ class _MedicationState extends State<Medication> {
                           MedicationService.removeFromMedicationList(
                               medication, widget.localDataService);
                           ReminderService.removeMedicationFromReminders(
-                              medication);
+                              medication, widget.localDataService);
                         });
                         Navigator.pop(context, true);
                       },
