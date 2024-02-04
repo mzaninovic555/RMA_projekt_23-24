@@ -10,8 +10,34 @@ class MedicationService {
     MedicationType('Metanfetamin tablet', 15, 3),
   ];
 
+  static List<MedicationType> _medicationList = [];
+
+  static set setMedicationList(List<MedicationType>? newList) {
+    _medicationList = newList ?? [];
+  }
+
+  static List<MedicationType> getMedication() {
+    return _medicationList;
+  }
+
+  static void addMedication(MedicationType medication) {
+    _medicationList.add(medication);
+  }
+
+  static void setMedicationByIndex(int index, MedicationType medication) {
+    _medicationList[index] = medication;
+  }
+
+  static void refillMedicationByIndex(int index, int quantityToAdd) {
+    _medicationList[index].quantityRemaining += quantityToAdd;
+  }
+
+  static void removeFromMedicationList(MedicationType medication) {
+    _medicationList.remove(medication);
+  }
+
   static List<MedicationType> getMedicationNotInGroup(ReminderGroup group) {
-    return mockMedication
+    return _medicationList
         .where((medication) => !group.medications.contains(medication))
         .toList();
   }

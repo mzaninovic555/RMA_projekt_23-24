@@ -20,6 +20,39 @@ class _ReminderListState extends State<ReminderList> {
 
   @override
   Widget build(BuildContext context) {
+    if (reminderGroups.isEmpty) {
+      return Scaffold(
+        body: const Padding(
+          padding: EdgeInsets.all(30.0),
+          child: Center(
+            child:
+              Text(
+                'No reminder groups currently added. '
+                'Add one with the floating button on the bottom',
+                style: TextStyle(
+                  fontSize: 22.0,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            ReminderGroup newReminderGroup = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddReminderGroup(),
+                ));
+
+            setState(() {
+              ReminderService.addNewReminderGroup(newReminderGroup);
+            });
+          },
+          child: const Icon(Icons.add),
+        ),
+      );
+    }
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
@@ -74,7 +107,8 @@ class _ReminderListState extends State<ReminderList> {
                 ),
               ),
               Text(
-                TimeFormatter.formatTimeOfDay(context, reminderGroup.timeOfReminder),
+                TimeFormatter.formatTimeOfDay(
+                    context, reminderGroup.timeOfReminder),
                 style: const TextStyle(
                   fontSize: 12.0,
                 ),
@@ -84,7 +118,9 @@ class _ReminderListState extends State<ReminderList> {
           const SizedBox(width: 8),
         ],
       ),
-      const SizedBox(height: 5,),
+      const SizedBox(
+        height: 5,
+      ),
       Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -114,11 +150,13 @@ class _ReminderListState extends State<ReminderList> {
               ReminderGroup newReminderGroup = await Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => EditReminderGroup(existingGroup: reminderGroup),
+                    builder: (context) =>
+                        EditReminderGroup(existingGroup: reminderGroup),
                   ));
 
               setState(() {
-                ReminderService.editReminderGroup(reminderGroup, newReminderGroup);
+                ReminderService.editReminderGroup(
+                    reminderGroup, newReminderGroup);
               });
             },
             child: const Text('Edit'),
@@ -127,10 +165,10 @@ class _ReminderListState extends State<ReminderList> {
             onPressed: () async {
               bool res = await showDialog(
                   context: context,
-                  builder: (BuildContext context) =>
-                      AlertDialog(
+                  builder: (BuildContext context) => AlertDialog(
                         title: Text('Delete ${reminderGroup.title}'),
-                        content: const Text('Are you sure you want to delete this reminder group?'),
+                        content: const Text(
+                            'Are you sure you want to delete this reminder group?'),
                         actions: [
                           TextButton(
                             onPressed: () {

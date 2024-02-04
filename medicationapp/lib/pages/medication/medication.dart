@@ -13,25 +13,46 @@ class Medication extends StatefulWidget {
 }
 
 class _MedicationState extends State<Medication> {
+  List<MedicationType> medicationList = MedicationService.getMedication();
+
   @override
   Widget build(BuildContext context) {
+    if (medicationList.isEmpty) {
+      return Scaffold(
+        body: const Padding(
+          padding: EdgeInsets.all(30.0),
+          child: Center(
+            child:
+            Text(
+              'No medication currently added. '
+                  'Add one with the floating button on the bottom',
+              style: TextStyle(
+                fontSize: 22.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            MedicationType newMedication = await Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => AddMedication(),
+                ));
+            setState(() {
+              MedicationService.addMedication(newMedication);
+            });
+            // TODO add database etc.
+          },
+          child: const Icon(Icons.add),
+        ),
+      );
+    }
+
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          MedicationType newMedication = await Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => AddMedication(),
-              ));
-          setState(() {
-            MedicationService.mockMedication.add(newMedication);
-          });
-          // TODO add database etc.
-        },
-        child: const Icon(Icons.add),
-      ),
       body: ListView.separated(
-        itemCount: MedicationService.mockMedication.length,
+        itemCount: medicationList.length,
         separatorBuilder: (BuildContext context, int index) => const Divider(),
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
@@ -39,21 +60,21 @@ class _MedicationState extends State<Medication> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                    '${MedicationService.mockMedication[index].quantityRemaining}'),
+                    '${medicationList[index].quantityRemaining}'),
                 const Text('remaining')
               ],
             ),
             title: Column(
               children: [
                 Text(
-                  MedicationService.mockMedication[index].name,
+                  medicationList[index].name,
                   style: const TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.w300,
                   ),
                 ),
                 Text(
-                  'Dosage: ${MedicationService.mockMedication[index].dosage.toString()}',
+                  'Dosage: ${medicationList[index].dosage.toString()}',
                   style: const TextStyle(
                     fontSize: 12.0,
                     fontWeight: FontWeight.bold,
@@ -67,11 +88,11 @@ class _MedicationState extends State<Medication> {
                 ElevatedButton(
                   onPressed: () async {
                     var editedMedication = await showEditDialog(
-                        MedicationService.mockMedication[index]);
+                        medicationList[index]);
                     if (editedMedication != null) {
                       setState(() {
-                        MedicationService.mockMedication[index] =
-                            editedMedication;
+                        MedicationService.setMedicationByIndex(
+                            index, editedMedication);
                       });
                     }
                   },
@@ -81,10 +102,10 @@ class _MedicationState extends State<Medication> {
                 ElevatedButton(
                   onPressed: () async {
                     var modalValue = await showRefillDialog(
-                        MedicationService.mockMedication[index]);
+                        medicationList[index]);
                     setState(() {
-                      MedicationService.mockMedication[index]
-                          .quantityRemaining += modalValue ?? 0;
+                      MedicationService.refillMedicationByIndex(
+                          index, modalValue ?? 0);
                     });
                   },
                   child: const Icon(Icons.add_circle),
@@ -93,6 +114,20 @@ class _MedicationState extends State<Medication> {
             ),
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          MedicationType newMedication = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => AddMedication(),
+              ));
+          setState(() {
+            MedicationService.addMedication(newMedication);
+          });
+          // TODO add database etc.
+        },
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -212,7 +247,8 @@ class _MedicationState extends State<Medication> {
                     TextButton(
                       onPressed: () {
                         setState(() {
-                          MedicationService.mockMedication.remove(medication);
+                          MedicationService.removeFromMedicationList(
+                              medication);
                           ReminderService.removeMedicationFromReminders(
                               medication);
                         });

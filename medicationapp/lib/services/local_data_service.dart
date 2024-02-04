@@ -1,18 +1,20 @@
 import 'dart:ui';
 
 import 'package:flutter/scheduler.dart';
+import 'package:medicationapp/pages/reminder_list/reminder_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class LocalDataService {
   static const String _darkMode = 'darkMode';
   static const String _isBackupEnabled = 'backupEnabled';
+  static const String _reminderData = 'reminderData';
 
   final SharedPreferences preferences;
 
   LocalDataService(this.preferences);
 
   static Future<LocalDataService> initLocalDataService() async {
-    dynamic dataStorage = await SharedPreferences.getInstance();
+    var dataStorage = await SharedPreferences.getInstance();
     return LocalDataService(dataStorage);
   }
 
@@ -26,6 +28,10 @@ class LocalDataService {
 
     if (preferences.getBool(_isBackupEnabled) == null) {
       preferences.setBool(_isBackupEnabled, true);
+    }
+
+    if (preferences.getString(_reminderData) == null) {
+
     }
   }
 
@@ -44,4 +50,6 @@ class LocalDataService {
   void setIsBackupEnabled(bool isDarkMode) {
     preferences.setBool(_isBackupEnabled, isDarkMode);
   }
+
+
 }

@@ -42,45 +42,51 @@ class ReminderService {
         []),
   ];
 
+  static List<ReminderGroup> _reminderList = [];
+
+  static set setReminderList(List<ReminderGroup>? newList) {
+    _reminderList = newList ?? [];
+  }
+
   static List<ReminderGroup> getReminderGroups() {
-    return mockMeds;
+    return _reminderList;
   }
 
   static void removeFromReminderGroup(int groupIndex,
       MedicationType medicationType) {
-    mockMeds[groupIndex].medications.remove(medicationType);
+    _reminderList[groupIndex].medications.remove(medicationType);
   }
 
   static void addMedicationItemsToGroup(int groupIndex,
       List<MedicationType> items) {
-    mockMeds[groupIndex].medications.addAll(items);
+    _reminderList[groupIndex].medications.addAll(items);
   }
 
   static void addNewReminderGroup(ReminderGroup reminderGroup) {
-    mockMeds.add(reminderGroup);
+    _reminderList.add(reminderGroup);
   }
 
   static void editReminderGroup(ReminderGroup oldReminderGroup,
       ReminderGroup newReminderGroup) {
-    var indexOf = mockMeds.indexOf(oldReminderGroup);
-    mockMeds[indexOf] = newReminderGroup;
+    var indexOf = _reminderList.indexOf(oldReminderGroup);
+    _reminderList[indexOf] = newReminderGroup;
   }
 
   static void removeReminderGroup(ReminderGroup reminderGroup) {
-    mockMeds.remove(reminderGroup);
+    _reminderList.remove(reminderGroup);
   }
 
   static void removeMedicationFromReminders(MedicationType medication) {
-    for (var reminder in mockMeds) {
+    for (var reminder in _reminderList) {
       reminder.medications.remove(medication);
     }
   }
 
   static void takeMedicationInGroup(ReminderGroup reminderGroup) {
-    var indexOf = mockMeds.indexOf(reminderGroup);
+    var indexOf = _reminderList.indexOf(reminderGroup);
 
-    mockMeds[indexOf].medications =
-        mockMeds[indexOf].medications.map((medication) {
+    _reminderList[indexOf].medications =
+        _reminderList[indexOf].medications.map((medication) {
           medication.quantityRemaining -= medication.dosage.toInt();
           return medication;
         }).toList();
@@ -88,7 +94,7 @@ class ReminderService {
 
   static void sendNotifications() {
     TimeOfDay now = TimeOfDay.now();
-    for (final group in mockMeds) {
+    for (final group in _reminderList) {
       if (group.timeOfReminder == now) {
         String body = group.medications
             .map((medication) => "${medication.name} ")

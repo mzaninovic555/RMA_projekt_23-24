@@ -12,7 +12,7 @@ class MultiSelect extends StatefulWidget {
     if (reminderGroup != null) {
       items = MedicationService.getMedicationNotInGroup(reminderGroup!);
     } else {
-      items = MedicationService.mockMedication;
+      items = MedicationService.getMedication();
     }
   }
 

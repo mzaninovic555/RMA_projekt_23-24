@@ -10,12 +10,3 @@ class ReminderGroup {
 
   ReminderGroup(this.title, this.timeOfReminder, this.medications, [this.color]);
 }
-
-/// Class for a singular medication item which is not grouped.
-class ReminderItem {
-  String title;
-  TimeOfDay timeOfReminder;
-  MedicationType medication;
-
-  ReminderItem(this.title, this.timeOfReminder, this.medication);
-}
