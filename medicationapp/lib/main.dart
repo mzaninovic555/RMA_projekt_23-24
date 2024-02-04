@@ -24,6 +24,9 @@ void main() async {
   // init backup service
   BackupService.initializeBackupCron();
 
+  // localDataService.preferences.remove('medicationData');
+  // localDataService.preferences.remove('reminderData');
+
   // init notification service
   await Notifications.initialize();
 
